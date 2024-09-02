@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mariadb-stful
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: maria-stateful
+  namespace: mariadb-stful
+spec:
+  selector:
+    matchLabels:
+      app: maria-stateful # has to match .spec.template.metadata.labels
+  serviceName: "maria-stateful"
+  replicas: 1 # by default is 1
+  template:
+    metadata:
+      labels:
+        app: maria-stateful # has to match .spec.selector.matchLabels
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: maria-stateful
+        image: mariadb:latest
+        env:
+        - name: MARIADB_PASSWORD
+          value: password
+        - name: MARIADB_DATABASE
+          value: mydb
+        - name: MARIADB_USER
+          value: user
+        # - name: MARIADB_PASSWORD
+        #   value: password
+        - name: MARIADB_ROOT_PASSWORD
+          value: password
+        ports:
+        - containerPort: 8000
+          name: maria-stateful
+        volumeMounts:
+        - name: mariadb-storage
+          mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+  - metadata:
+      name: mariadb-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+---

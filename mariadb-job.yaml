@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mariadb-jobns
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mariadb-job
+  namespace: mariadb-jobns
+  labels:
+    app: mariadb-job
+spec:
+  completions: 3
+  parallelism: 2
+  template:
+    metadata:
+      name: mariadb-job
+      labels:
+        app: mariadb-job
+    spec:
+      containers:
+      - name: mariadb-job
+        image: mariadb:latest
+        env:
+        - name: MARIADB_PASSWORD
+          value: password
+        - name: MARIADB_DATABASE
+          value: mydb
+        - name: MARIADB_USER
+          value: user
+        # - name: MARIADB_PASSWORD
+        #   value: password
+        - name: MARIADB_ROOT_PASSWORD
+          value: password
+      restartPolicy: Never
+---

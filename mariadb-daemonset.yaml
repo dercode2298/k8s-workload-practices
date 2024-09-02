@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mariadb-daemonset
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: mariadb-daemonset
+  namespace: mariadb-daemonset
+  labels:
+    app: mariadb-daemonset
+spec:
+  selector:
+    matchLabels:
+      app: mariadb-daemonset
+  template:
+    metadata:
+      labels:
+        app: mariadb-daemonset
+    spec:
+      containers:
+      - name: mariadb-daemonset
+        image: mariadb:lastest
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "128m"
+          requests:
+            memory: "128Mi"
+            cpu: "64m"
+---

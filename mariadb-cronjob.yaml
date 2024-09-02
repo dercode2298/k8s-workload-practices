@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mariadb-cronjobns
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cronjobname
+  namespace: mariadb-cronjobns
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: jobname
+            image: mariadb:latest
+          restartPolicy: Never
+---
